@@ -1,12 +1,24 @@
 import {Button, Image, StyleSheet, Text, View} from 'react-native';
-import {PostImage} from '../../types';
+import {PostImage, RootStackParams} from '../../types';
 import {FC} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-const TodaysImage: FC<PostImage> = ({date, title, url}) => {
+type PostImageNavigationProps = NativeStackNavigationProp<
+  RootStackParams,
+  'Detail'
+>;
+
+const TodaysImage: FC<PostImage> = ({date, title, url, explanation}) => {
   if (!url) {
     // Handle the case where the URL is null or undefined
     return null; // or display a placeholder image
   }
+
+  const {navigate} = useNavigation<PostImageNavigationProps>();
+  const handleViewPress = () => {
+    navigate('Detail', {title, date, url, explanation});
+  };
 
   return (
     <View style={styles.container}>
@@ -15,7 +27,7 @@ const TodaysImage: FC<PostImage> = ({date, title, url}) => {
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.date}>{date}</Text>
       <View style={styles.buttonContainer}>
-        <Button title="View" />
+        <Button title="View" onPress={handleViewPress} />
       </View>
     </View>
   );
